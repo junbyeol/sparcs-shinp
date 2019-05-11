@@ -68,6 +68,10 @@ footer {
     z-index: 98;
 }
 
+#footer-link{
+    margin:0 0 0 30px;
+}
+
 button {
     margin-top: 5px;
 }
@@ -96,7 +100,7 @@ button {
     top: 22px;
 }
 
-li {
+ .header-nav>ul>li {
     display: inline-block;
     margin-left: 12px;
     cursor: pointer;
@@ -113,6 +117,8 @@ li {
     
     background: #fff;
 }
+
+/*for login.html & register.html*/
 
 .loginPane{
     display: inline-block;
@@ -164,6 +170,87 @@ li {
     width: 48.5%;
 }
 
-#footer-link{
-    margin:0 0 0 30px;
+/*for mainPage.html */
+
+#page-container{
+    display: inline-flex;
+    flex-direction: row;
+
+    position: relative;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    height: calc(100% - 72px);
+}
+
+#left-side{
+    display:inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    width: 240px;
+    height: 100%;
+}
+
+#grouplistPane,#info-pane{
+    display: flex;
+    width: 100%;
+
+    border: 1px solid rgba(0,0,0,.54);
+    border-radius: 10px;
+    box-shadow: 1px 2px 2px 0 rgba(0,0,0,.54);
+}
+
+#info-pane{
+    height: 48%;
+}
+
+#grouplistPane {
+    display: flex;
+    flex-direction: column;
+
+    height: 50%;
+}
+
+#info-placeholder{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    color: #999;
+}
+
+.info-placeholder-title{
+    font-size: 25px;
+}
+
+#grouplistPane>ul{
+    padding-left: 0px;
+    list-style: none;
+}
+
+.grouplist{
+    display: flex;
+    margin: 9px 10px 3px 10px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgba(0,0,0,.54);
+
+    color: #999;
+}
+
+#grouplist-last{
+    border-top: 1px solid rgba(0,0,0,.54);
+    margin-top: -0.5px;
+}
+
+#center {
+    margin-left: 10px;
+    height:100%;
+    width: 800px;
+
+    border: 1px solid rgba(0,0,0,.54);
+    border-radius: 10px;
+    box-shadow: 1px 2px 2px 0 rgba(0,0,0,.54);
 }
