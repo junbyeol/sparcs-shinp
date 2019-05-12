@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodemonnode": "nodemon --watch ./ ./server.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,12 @@
   "homepage": "https://github.com/LuLu-jun/sparcs-shinp#readme",
   "dependencies": {
     "ejs": "^2.6.1",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mongoose": "^5.5.7"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2"
   }
 }
