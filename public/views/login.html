@@ -24,17 +24,19 @@
        <div class="mainPane">
             <div class="loginPane">
                 <h2>로그인</h2>
-                <div class="loginPane-inputPane">
-                    <input id="idInput" type="text" placeholder="ID">
-                    <input id="pwInput" type="text" placeholder="Password">
-                </div>
-                <div class="loginPane-btnPane">
-                    <button id="loginBtn">로그인</button>
-                    <div class="loginPane-btnPane-extraBtn">
-                        <button id="registerBtn" onclick="location.href='register.html'">회원가입</button>
-                        <button id="lostBtn">ID/PW찾기</button>
+                <form method="POST" action="/account/login">
+                    <div class="loginPane-inputPane">
+                        <input id="idInput" type="text" placeholder="ID" name="id">
+                        <input id="pwInput" type="password" placeholder="Password" name="pw">
                     </div>
-                </div>
+                    <div class="loginPane-btnPane">
+                        <button id="loginBtn" type="submit">로그인</button>
+                        <div class="loginPane-btnPane-extraBtn">
+                            <button type="button" id="registerBtn" onclick="location.href='/register'">회원가입</button>
+                            <button id="lostBtn">ID/PW찾기</button>
+                        </div>
+                    </div>
+                </form>
             </div>
             <footer>
                     <h3 id="footer-link">made by lulu</h3>
