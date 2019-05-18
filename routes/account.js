@@ -113,6 +113,21 @@ router.post('/login', (req,res) => {
     });
 });
 
+router.get('/retrive', function(req, res){
+    account.findOne({},(err,schemas) => {
+        if(err) {
+            console.log(err);
+            res.status(500).end('DB Error');
+        }
+        console.log('retrive success');
+        return res.json(schemas);
+    });
+});
+
+router.post('/requestSessionID',(req,res)=>{
+    return req.session;
+});
+
 module.exports = router;
 
 

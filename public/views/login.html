@@ -5,7 +5,7 @@
         <title>출첵넷: 출첵의 혁명</title>
         <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic|Raleway:800" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
-        <!--- script src="index.js"></script> --->
+        <script src="main.js"></script>
     </head>
     <body>
        <header>
@@ -24,13 +24,13 @@
        <div class="mainPane">
             <div class="loginPane">
                 <h2>로그인</h2>
-                <form method="POST" action="/account/login">
+                <form method="POST" action="/account/login" id="loginForm">
                     <div class="loginPane-inputPane">
                         <input id="idInput" type="text" placeholder="ID" name="id">
                         <input id="pwInput" type="password" placeholder="Password" name="pw">
                     </div>
                     <div class="loginPane-btnPane">
-                        <button id="loginBtn" type="submit">로그인</button>
+                        <button id="loginBtn" type="button" onclick="goToHome()">로그인</button>
                         <div class="loginPane-btnPane-extraBtn">
                             <button type="button" id="registerBtn" onclick="location.href='/register'">회원가입</button>
                             <button id="lostBtn">ID/PW찾기</button>

@@ -17,6 +17,7 @@ mongoose.connect("mongodb://localhost/shinp_account"); // collection 이름은 s
 /*middleware*/
 app.use(express.static('public/views'));
 app.use(express.static('public/scripts'));
+app.use(express.static('public/images'));
 app.set('views',__dirname+'/public/views');
 app.engine('html',require('ejs').renderFile);
 

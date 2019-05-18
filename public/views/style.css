@@ -50,6 +50,19 @@ header {
     z-index: 99;
 }
 
+.login-status {
+    position: absolute;
+    padding: 5px 5px;
+    top: 18px;
+    left: 600px;
+
+    border: 1px solid rgba(0,0,0,.54);
+    border-radius: 10px;
+    
+    align-items: center;
+}
+
+
 footer {
     background: #fff;
     border-color: rgba(0,0,0,.14);
@@ -173,7 +186,7 @@ button {
     width: 48.5%;
 }
 
-/*for mainPage.html */
+/*for home.html */
 
 #page-container{
     display: inline-flex;
@@ -207,7 +220,7 @@ button {
 #info-pane{
     height: 48%;
 }
-
+/* grouplist*/
 #grouplistPane {
     display: flex;
     flex-direction: column;
@@ -243,6 +256,11 @@ button {
     color: #999;
 }
 
+.grouplist:hover{
+    color: #111;
+    cursor: pointer;
+}
+
 #grouplist-last{
     border-top: 1px solid rgba(0,0,0,.54);
     margin-top: -0.5px;
@@ -256,4 +274,24 @@ button {
     border: 1px solid rgba(0,0,0,.54);
     border-radius: 10px;
     box-shadow: 1px 2px 2px 0 rgba(0,0,0,.54);
+}
+
+#calendar {
+    position: relative;
+    top: 20px;
+
+    font-family: 'Raleway',sans-serif;
+    font-size: 20px;
+
+    border-collapse: collapse;
+    display: none;
+}
+
+
+tr{
+    
+}
+
+td{
+    padding: 20px 20px;   
 }

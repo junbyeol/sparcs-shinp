@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // routes/home.js
 
 const express = require('express');
@@ -7,7 +8,7 @@ const router = express.Router();
 
 router.get('/',(req,res) => {
     if(req.session.logined){
-        res.render('home.html',{id:req.session.user_id});
+        res.render('home.html',{id:req.session.id});
     } else {
         res.render('login.html');
     }
