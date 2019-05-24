@@ -39,6 +39,7 @@ function buildCalendar(){//현재 달 달력 만들기
     tbCalendarYM.innerHTML = today.getFullYear() + "년 " + (today.getMonth() + 1) + "월"; 
  
     /*while은 이번달이 끝나면 다음달로 넘겨주는 역할*/
+    
     while (tbCalendar.rows.length > 2) {
         //열을 지워줌
         //기본 열 크기는 body 부분에서 2로 고정되어 있다.

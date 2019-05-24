@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const express = require('express');
-const account = require('../models/account');
+const account = require('../models/account').account;
+const group = require('../models/account').group;
 const router = express.Router();
 const crypto = require("crypto");
 
@@ -75,7 +76,7 @@ router.post('/login', (req,res) => {
         `);
     }
 
-    account.findOne({"id":req.body.id}, (err,user)=> {
+    account.findOne({id:req.body.id}, (err,user)=> {
         if(err){    
             console.log(err);
             return res.send(`
@@ -125,33 +126,68 @@ router.get('/retrive', function(req, res){
 
 router.post('/groupAdd', (req,res) => {
     /* 이미 존재하는 ID인지 확인*/
-    account.findOne({id: req.body.groupName}, (err,user)=>{
-        if(err) return res.redirect('/');
+    group.findOne({groupName: req.body.groupName}, (err,user)=>{
+        if(err){
+            console.log(err);
+            return res.redirect('/error');
+        } 
         else if (user !== null ) {
             console.log('Group already exists');
             return res.redirect('/');
         }
         else {
-            console.log(req.session);
             //login 
-            /*
-            const newGroup = new ();
-            newAccount.id = req.body.id;
-            
-            const inputPw = req.body.pw;
-            const salt= Math.round((new Date().valueOf()*Math.random()))+"";
-            newAccount.pw = crypto.createHash("sha512").update(inputPw+salt).digest("hex");
-            newAccount.salt = salt;
+            const newGroup = new group();
+            newGroup.groupName = req.body.groupName;
+            newGroup.groupId = req.body.groupId;
+            newGroup.groupInfo = req.body.groupInfo;
 
-            newAccount.save((err) => {
+            newGroup.groupMeetings.sun = req.body.sun;
+            newGroup.groupMeetings.mon = req.body.mon;
+            newGroup.groupMeetings.tue = req.body.tue;
+            newGroup.groupMeetings.wed = req.body.wed;
+            newGroup.groupMeetings.thu = req.body.thu;
+            newGroup.groupMeetings.fri = req.body.fri;
+            newGroup.groupMeetings.sat = req.body.sat;
+            
+            const loginAccount = req.session.user_id;
+            newGroup.groupMembers = loginAccount;
+            console.log(req.session.user_id);
+
+            newGroup.save((err) => {
                 if(err) {
                     console.log(err);
-                    return res.redirect('/register');
+                    return res.redirect('/home');
                 }
                 console.log('good database created');
-                return res.redirect('/login');
+                console.log(newGroup);
+                
+                account.findOne({id: loginAccount}, (err,user) => {
+                    if(err){
+                        console.log(err);
+                        return res.redirect('/error');
+                    } else if(!user){
+                        return res.redirect('/error');
+                    }
+                    else {
+                        user.groupList.push({
+                            groupName: req.body.groupName, 
+                            groupId: req.body.groupId
+                        });
+                        user.save((err) => {
+                            if(err) {
+                                console.log(user);
+                                console.log(err);
+                                return res.redirect('/home');
+                            }
+                            console.log('database pushed well');
+                            return res.redirect('/home');
+                        });
+                    }
+                });
+
             });
-            */
+            
         }
     });
 });

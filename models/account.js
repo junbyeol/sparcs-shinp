@@ -6,21 +6,29 @@ const Group = new Schema({
     groupId: String,
     groupInfo: String,
     groupMeetings: {
-        sunday: Boolean,
-        monday: Boolean,
-        tuesday: Boolean,
-        wednesday: Boolean,
-        thursday: Boolean,
-        friday: Boolean,
-        saturday: Boolean
-    }
+        sun: Boolean,
+        mon: Boolean,
+        tue: Boolean,
+        wed: Boolean,
+        thu: Boolean,
+        fri: Boolean,
+        sat: Boolean
+    },
+    groupMembers: [String]
 });
 
 const Account = new Schema({
     id: String,
     pw: String,
     salt: String,
-    groupList: [Group] 
+    groupList: [new Schema({
+        groupName: String,
+        groupId: String
+    })]
 });
 
-module.exports = mongoose.model('account', Account);
+
+const account  = mongoose.model('account', Account);
+const group = mongoose.model('group',Group);
+
+module.exports = {account,group};

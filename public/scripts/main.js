@@ -8,28 +8,20 @@ console.log('start');
 
 // eslint-disable-next-line no-undef
 
-function loadLoginedID(){
-    const targetText = document.getElementById('login-status-loginedID');
-    
+function loadLoginedID(){ 
+    ///////////////////////////////////////////////////////////
     axios.post('/getSession')
         .then((res)=>{
-            console.log("res");
-            console.log(res);
-            document.getElementById(login-status-loginedID).innerHTML = res.session;
+            document.getElementById('login-status-loginedID').innerHTML = res.session;
         })
         .catch((err)=>{
-            console.log("err");
             console.log(err);
         });
-    //targetText.innerHTML = getJSessionId();
-}
-
-function goToHome(){
-    document.getElementById(loginForm).submit();
+    //////////////////////////////////////////////////////
 }
 
 function loadGrouplist(){
-    axios.get('http://localhost:8000/account/retrive')
+    axios.get('/account/retrive')
         .then((res)=> {
             const groups = res.data.groupList;
             for(let i=0;i<groups.length;i++){
@@ -50,8 +42,7 @@ function addGrouplist(val){
     document.getElementById('grouplist-ul').appendChild(group);
 }
 
-function dayCellClicked(id){
-    var color = document.getElementById(id).style.backgroundColor;
-    color = "skyblue";
-    console.log(color);
+function checkboxClicked(id){
+    var chkbox = document.getElementById(id);
+    chkbox.value = chkbox.checked;
 }
