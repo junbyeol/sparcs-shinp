@@ -99,7 +99,7 @@ router.post('/login', (req,res) => {
                 req.session.logined = true; 
 
                 console.log('login succeed:'+req.body.id);
-                return res.redirect('/');
+                return res.redirect('/home');
             } else {
                 console.log('login: id does not exist');
                 return res.send(`
@@ -119,13 +119,41 @@ router.get('/retrive', function(req, res){
             console.log(err);
             res.status(500).end('DB Error');
         }
-        console.log('retrive success');
         return res.json(schemas);
     });
 });
 
-router.post('/requestSessionID',(req,res)=>{
-    return req.session;
+router.post('/groupAdd', (req,res) => {
+    /* 이미 존재하는 ID인지 확인*/
+    account.findOne({id: req.body.groupName}, (err,user)=>{
+        if(err) return res.redirect('/');
+        else if (user !== null ) {
+            console.log('Group already exists');
+            return res.redirect('/');
+        }
+        else {
+            console.log(req.session);
+            //login 
+            /*
+            const newGroup = new ();
+            newAccount.id = req.body.id;
+            
+            const inputPw = req.body.pw;
+            const salt= Math.round((new Date().valueOf()*Math.random()))+"";
+            newAccount.pw = crypto.createHash("sha512").update(inputPw+salt).digest("hex");
+            newAccount.salt = salt;
+
+            newAccount.save((err) => {
+                if(err) {
+                    console.log(err);
+                    return res.redirect('/register');
+                }
+                console.log('good database created');
+                return res.redirect('/login');
+            });
+            */
+        }
+    });
 });
 
 module.exports = router;

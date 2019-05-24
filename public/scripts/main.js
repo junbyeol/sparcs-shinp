@@ -11,19 +11,20 @@ console.log('start');
 function loadLoginedID(){
     const targetText = document.getElementById('login-status-loginedID');
     
-    axios.post('/')
+    axios.post('/getSession')
         .then((res)=>{
+            console.log("res");
             console.log(res);
-            targetText.innerHTML = res.body.id;
+            document.getElementById(login-status-loginedID).innerHTML = res.session;
         })
         .catch((err)=>{
+            console.log("err");
             console.log(err);
         });
     //targetText.innerHTML = getJSessionId();
 }
 
 function goToHome(){
-    const id = document.getElementById(idInput).value;
     document.getElementById(loginForm).submit();
 }
 
@@ -46,6 +47,11 @@ function addGrouplist(val){
     group.id = `grouplist-${val.groupId}`;
 
     group.innerHTML = `<div class="grouplist">${val.groupName}</div>`;
-    console.log(group);
     document.getElementById('grouplist-ul').appendChild(group);
+}
+
+function dayCellClicked(id){
+    var color = document.getElementById(id).style.backgroundColor;
+    color = "skyblue";
+    console.log(color);
 }
