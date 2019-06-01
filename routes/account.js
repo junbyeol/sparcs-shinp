@@ -114,8 +114,8 @@ router.post('/login', (req,res) => {
     });
 });
 
-router.get('/retrive', function(req, res){
-    account.findOne({},(err,schemas) => {
+router.get('/retriveLoadGroups', function(req, res){
+    account.findOne({id:req.session.user_id},(err,schemas) => {
         if(err) {
             console.log(err);
             res.status(500).end('DB Error');
@@ -124,15 +124,21 @@ router.get('/retrive', function(req, res){
     });
 });
 
+router.get('/retriveGroupInfo',(req,res)=>{
+    group.findOne({groupId: req.query.id}, (err,schemas)=>{
+        return res.json(schemas);
+    });
+});
+
 router.post('/groupAdd', (req,res) => {
     /* 이미 존재하는 ID인지 확인*/
-    group.findOne({groupName: req.body.groupName}, (err,user)=>{
+    group.findOne({groupId: req.body.groupId}, (err,user)=>{
         if(err){
             console.log(err);
             return res.redirect('/error');
         } 
         else if (user !== null ) {
-            console.log('Group already exists');
+            console.log('Group with same ID already exists');
             return res.redirect('/');
         }
         else {
@@ -186,6 +192,44 @@ router.post('/groupAdd', (req,res) => {
                     }
                 });
 
+            });
+            
+        }
+    });
+});
+
+router.post('/groupUpdate', (req,res) => {
+    /* 이미 존재하는 ID인지 확인*/
+    console.log('update start');
+    group.findOne({groupId: req.body.groupId}, (err,schema)=>{
+        if(err){
+            console.log(err);
+            return res.redirect('/error');
+        } 
+        else if (schema === null ) {
+            console.log(`Your group is gone!:${req.body.groupId}`);
+            return res.redirect('/error');
+        }
+        else {
+            schema.groupName = req.body.groupName;
+            schema.groupInfo = req.body.groupInfo;
+
+            schema.groupMeetings.sun = req.body.sun;
+            schema.groupMeetings.mon = req.body.mon;
+            schema.groupMeetings.tue = req.body.tue;
+            schema.groupMeetings.wed = req.body.wed;
+            schema.groupMeetings.thu = req.body.thu;
+            schema.groupMeetings.fri = req.body.fri;
+            schema.groupMeetings.sat = req.body.sat;
+
+            schema.save((err) => {
+                if(err) {
+                    console.log(err);
+                    return res.redirect('/home');
+                }
+                console.log('good database updated');
+                console.log(schema);
+                return res.redirect('/home');
             });
             
         }

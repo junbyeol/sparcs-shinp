@@ -32,7 +32,7 @@ router.get('/register', (req,res) => {
 });
 
 router.post('/getSession', (req,res) => {
-    return res.json({id:req.session.id});
+    return res.json({id:req.session.user_id});
 });
 
 

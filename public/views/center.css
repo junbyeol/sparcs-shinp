@@ -21,12 +21,8 @@
     font-size: 20px;
 
     border-collapse: collapse;
-    display: none;
 }
 
-tr{
-    
-}
 
 td{
     padding: 20px 20px;   
@@ -34,12 +30,11 @@ td{
 
 /* groupAdd mode */
 
-.groupAddPane>h2{
+.groupAddPane h2, .groupUpdatePane h2{
     text-align: left;
 }
 
-#groupAddPane-inputPane-groupName, #groupAddPane-inputPane-groupInfo
-,#groupAddPane-inputPane-meetingDay, #groupAddPane-inputPane-groupMember {
+.groupAddPane span, .groupUpdatePane span{
     width: 100%;
     display: inline-flex;
 
@@ -52,28 +47,24 @@ td{
     text-align: center;
 }
 
-#groupNameLabel, #groupInfoLabel, #meetingDayLabel, #groupMemberLabel{
+
+.groupAddPane label,.groupUpdatePane label{
     width: 100px;
     border-right: 1px solid rgba(0,0,0,.54);
 
     display: flex;
 }
 
-#groupIdLabel {
-    width: 80px;
+.groupIdLabel{
     margin-left: 20px;
-    border-right: 1px solid rgba(0,0,0,.54);
-
-    display: flex;
 }
 
-#groupNameInput, #groupIdInput, #groupInfoInput{
+.groupAddPane input[type=text],.groupUpdatePane input[type=text]{
     display: block;
     margin-top: 5px;
     padding-left: 5px;
     margin-left: 10px;
     height: 40px;
-    width: 220px;
 
     border: 1px solid rgba(0,0,0,.54);
     border-radius: 10px;
@@ -81,11 +72,8 @@ td{
     font-size: 16px;
 }
 
-#groupInfoInput{
-    width: 500px;
-}
 
-#dayTable{
+.dayTable{
     margin-top: 5px;
     margin-bottom: 5px;
     margin-left: 10px;
@@ -103,16 +91,24 @@ td{
     justify-content: space-around;
 }
 
-#dayTable>label{
+.dayTable label{
     padding-top: 10px;
     padding-right: 7px;
     display: table-cell;
+
+    width: 50px;
+    border-width: 0px;
 }
 
-#groupMemberTable{
+.groupMemberTable{
     width: 500px;
     height: 150px;
     margin-left: 10px;
 
     border: 1px solid rgba(0,0,0,.54);
+}
+
+.btnPane button{
+    padding: 3px 8px;
+    width: 48.5%
 }

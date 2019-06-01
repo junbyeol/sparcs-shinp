@@ -30,7 +30,7 @@ function buildCalendar(){//현재 달 달력 만들기
     //new를 써주면 정확한 월을 가져옴, getMonth()+1을 해주면 다음달로 넘어가는데
     //day를 1부터 시작하는게 아니라 0부터 시작하기 때문에 
     //대로 된 다음달 시작일(1일)은 못가져오고 1 전인 0, 즉 전달 마지막일 을 가져오게 된다
-    var tbCalendar = document.getElementById("calendar");
+    var tbCalendar = document.getElementById("tbCalendar");
     //날짜를 찍을 테이블 변수 만듬, 일 까지 다 찍힘
     var tbCalendarYM = document.getElementById("tbCalendarYM");
     //테이블에 정확한 날짜 찍는 변수
@@ -73,7 +73,7 @@ function buildCalendar(){//현재 달 달력 만들기
             //월화수목금토일을 7로 나눴을때 나머지가 0이면 cnt가 7번째에 위치함을 의미한다
             cell.innerHTML = "<font color=skyblue>" + i;
             //7번째의 cell에만 색칠
-            row = calendar.insertRow();
+            row = tbCalendar.insertRow();
             //토요일 다음에 올 셀을 추가
         }
         /*오늘의 날짜에 노란색 칠하기*/

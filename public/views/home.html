@@ -9,12 +9,11 @@
         <script type="text/javascript" src="calendar.js"></script> 
         <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script> 
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script> $(document).ready(loadGrouplist) </script>
-        <script> $(document).ready(loadLoginedID) </script>
+        <script> $(document).ready(loadPage) </script>
     </head>
     <body>
        <header>
-            <h1 id="header-title">ChulCheckNet</h1>
+            <h1 id="header-title">ChoolCheckNet</h1>
             <nav class="header-nav">
                 <ul class="header-nav-ul">
                     <li class="header-nav-link">
@@ -35,10 +34,34 @@
                 <div id="left-side">
                     <div id="info-pane">
                         <div id="info-placeholder">
-                            <div class="info-placeholder-title">ChulCheckNet</div>
+                            <div class="info-placeholder-title">ChoolCheckNet</div>
                             <div class="info-placeholder-content">made by lulu</div>
                             <div class="info-placeholder-content">lulu@sparcs.org</div>
                             <div class="info-placeholder-content">yoonjs0510@kaist.ac.kr</div>
+                        </div>
+                        <div id="info-content">
+                            <h1 id="info-content-groupName"></h1>
+                            <span>
+                                <label>영문명</label>
+                                <h2 id="info-content-groupId"></h2>
+                            </span>
+                            <span>
+                                <label>소개</label>
+                                <h2 id="info-content-groupInfo"></h2>
+                            </span>
+                            <span>
+                                <label>정모요일</label>
+                                <h2 id="info-content-groupMeetsday"></h2>
+                            </span>
+                            <span>
+                                <label>인원수</label>
+                                <h2 id="info-content-groupMembers"></h2>
+                            </span>
+                            <div id="info-content-btnPane">
+                                <button type="submit" onclick="updategroupAddPane()">정보수정</button>
+                                <button type="button" onclick="deleteBtnClicked()" disabled>그룹삭제</button>
+                                
+                            </div>
                         </div>
                     </div>
                     <div id="grouplistPane">
@@ -49,14 +72,12 @@
 
                 <div id="center">
                     <div id="calendar">
-                        <table border="3" align="center">
+                        <table id="tbCalendar" border="3" align="center">
                                 <tr><!-- label은 마우스로 클릭을 편하게 해줌 -->
                                     <td onclick="prevCalendar()"><label><</label></td>
                                     <td align="center" id="tbCalendarYM" colspan="5">
                                     yyyy년 m월</td>
-                                    <td onclick="nextCalendar()"><label >>
-                                        
-                                    </label></td>
+                                    <td onclick="nextCalendar()"><label >></label></td>
                                 </tr>
                                 <tr>
                                     <td align="center"><font color ="#F79DC2">일</td>
@@ -77,44 +98,81 @@
                         <div class="groupAddPane">
                             <h2>+새 그룹 추가</h2>
                             <form method="POST" action="/account/groupAdd" id="groupAddForm">
-                                <div class="groupAddPane-inputPane">
-                                    <div id="groupAddPane-inputPane-groupName">
-                                        <label id="groupNameLabel">그룹명 </label>
-                                        <input id="groupNameInput" type="text" name="groupName" placeholder="그룹명 ex) SPARCS">
-                                        <label id="groupIdLabel">영문명 </label>
-                                        <input id="groupIdInput" type="text" name="groupId" placeholder="영문명 ex) sparcs"> 
+                                <span>
+                                    <label>그룹명 </label>
+                                    <input type="text" name="groupName" placeholder="그룹명">
+                                    <label class="groupIdLabel">영문명 </label>
+                                    <input type="text" name="groupId" placeholder="그룹 고유 ID(중복불가)"> 
+                                </span>
+                                <span>
+                                    <label>그룹소개 </label>
+                                    <input type="text" name="groupInfo" placeholder="30자 이내" size="30">
+                                </span>
+                                <span>
+                                    <label>정기모임<br>요일설정</label>
+                                    <div class="dayTable">
+                                        <label><input type="checkbox" name="sun" id="sunInput" value="false" onclick="checkboxClicked('sunInput')">일</label>
+                                        <label><input type="checkbox" name="mon" id="monInput" value="false" onclick="checkboxClicked('monInput')">월</label>
+                                        <label><input type="checkbox" name="tue" id="tueInput" value="false" onclick="checkboxClicked('tueInput')">화</label>
+                                        <label><input type="checkbox" name="wed" id="wedInput" value="false" onclick="checkboxClicked('wedInput')">수</label>
+                                        <label><input type="checkbox" name="thu" id="thuInput" value="false" onclick="checkboxClicked('thuInput')">목</label>
+                                        <label><input type="checkbox" name="fri" id="friInput" value="false" onclick="checkboxClicked('friInput')">금</label>
+                                        <label><input type="checkbox" name="sat" id="satInput" value="false" onclick="checkboxClicked('satInput')">토</label>
                                     </div>
-                                    <div id="groupAddPane-inputPane-groupInfo">
-                                        <label id="groupInfoLabel">그룹소개 </label>
-                                        <input id="groupInfoInput" type="text" name="groupInfo" placeholder="그룹 소개">
-                                    </div>
-                                    <div id="groupAddPane-inputPane-meetingDay">
-                                        <label id="meetingDayLabel">정기모임<br>요일설정</label>
-                                        <div id="dayTable">
-                                            <label><input type="checkbox" name="sun" id="sunInput" value="false" onclick="checkboxClicked('sunInput')">일</label>
-                                            <label><input type="checkbox" name="mon" id="monInput" value="false" onclick="checkboxClicked('monInput')">월</label>
-                                            <label><input type="checkbox" name="tue" id="tueInput" value="false" onclick="checkboxClicked('tueInput')">화</label>
-                                            <label><input type="checkbox" name="wed" id="wedInput" value="false" onclick="checkboxClicked('wedInput')">수</label>
-                                            <label><input type="checkbox" name="thu" id="thuInput" value="false" onclick="checkboxClicked('thuInput')">목</label>
-                                            <label><input type="checkbox" name="fri" id="friInput" value="false" onclick="checkboxClicked('friInput')">금</label>
-                                            <label><input type="checkbox" name="sat" id="satInput" value="false" onclick="checkboxClicked('satInput')">토</label>
-                                        </div>
-                                    </div>
-                                    <div id="groupAddPane-inputPane-groupMember">
-                                        <label id="groupMemberLabel">그룹 멤버<br>추가</label>
-                                        <table id="groupMemberTable">
+                                </span>
+                                <span>
+                                    <label>그룹 멤버<br>추가</label>
+                                    <table class="groupMemberTable">
 
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="loginPane-btnPane">
-                                    <button type="button" id="registerBtn">취소</button>
-                                    <button id="lostBtn">확인</button>
+                                    </table>
+                                </span>
+                                <div class="btnPane">
+                                    <button type="submit">확인</button>
+                                    <button type="button">취소</button>
                                 </div>
                             </form>
                         </div>
                     </div>
 
+                    <div id="groupUpdate">
+                            <div class="groupUpdatePane">
+                                <h2 id="groupUpdatePane-title"></h2>
+                                <form method="POST" action="/account/groupUpdate" id="groupUpdateForm">
+                                    <span>
+                                        <label>그룹명 </label>
+                                        <input id="groupNameInput" type="text" name="groupName" placeholder="그룹명 ex) SPARCS">
+                                        <label class="groupIdLabel">영문명 </label>
+                                        <input id="groupIdInput" type="text" name="groupId" placeholder="영문명 ex) sparcs" readonly> 
+                                    </span>
+                                    <span>
+                                        <label>그룹소개 </label>
+                                        <input id="groupInfoInput" type="text" name="groupInfo" placeholder="30자 이내" size="30">
+                                    </span>
+                                    <span>
+                                        <label>정기모임<br>요일설정</label>
+                                        <div class="dayTable">
+                                            <label><input type="checkbox" name="sun" id="sunInp" value="false" onclick="checkboxClicked('sunInp')">일</label>
+                                            <label><input type="checkbox" name="mon" id="monInp" value="false" onclick="checkboxClicked('monInp')">월</label>
+                                            <label><input type="checkbox" name="tue" id="tueInp" value="false" onclick="checkboxClicked('tueInp')">화</label>
+                                            <label><input type="checkbox" name="wed" id="wedInp" value="false" onclick="checkboxClicked('wedInp')">수</label>
+                                            <label><input type="checkbox" name="thu" id="thuInp" value="false" onclick="checkboxClicked('thuInp')">목</label>
+                                            <label><input type="checkbox" name="fri" id="friInp" value="false" onclick="checkboxClicked('friInp')">금</label>
+                                            <label><input type="checkbox" name="sat" id="satInp" value="false" onclick="checkboxClicked('satInp')">토</label>
+                                        </div>
+                                    </span>
+                                    <span>
+                                        <label>그룹 멤버<br>추가</label>
+                                        <table class="groupMemberTable">
+    
+                                        </table>
+                                    </span>
+                                    <div class="btnPane">
+                                        <button type="submit">확인</button>
+                                        <button type="button">취소</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                 </div>
             </div>
 
