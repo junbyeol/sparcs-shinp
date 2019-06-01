@@ -6,29 +6,40 @@ console.log('start');
 
 // eslint-disable-next-line no-undef
 
-function loadPage(){
+async function loadPage(){
 
     document.getElementById('calendar').style.display = 'none';
     document.getElementById('groupAdd').style.display = 'none';
     document.getElementById('groupUpdate').style.display = 'none';
 
+    let loginedID;
+
     //loadLoginedID();
-    axios.post('/getSession')
+    await axios.post('/getSession')
         .then((res)=>{
             document.getElementById('login-status-loginedID').innerHTML
          = res.data.id;
+
+            loginedID = res.data.id;
         })
         .catch((err)=>{
             console.log(err);
         });
+
     //loadGrouplist();
-    axios.get('/account/retriveLoadGroups')
+    await axios.get('/account/retriveAccount',{
+        params:{
+            id: loginedID
+        }
+    })
         .then((res)=> {
             const groups = res.data.groupList;
             for(let i=0;i<groups.length;i++){
                 addGrouplist(groups[i]);
             }
             addGrouplist({groupName:"+ 새 그룹 추가", groupId:"add"});
+
+            addToMember(res.data.id,false);
         })
         .catch((err)=>{
             console.log(err);
@@ -54,7 +65,7 @@ function groupListClicked(groupId){
         document.getElementById('info-placeholder').style.display ='none';
         document.getElementById('info-content').style.display = 'flex';
 
-        axios.get('/account/retriveGroupInfo',{
+        axios.get('/account/retriveGroup',{
             params: {
                 id: groupId
             }
@@ -84,6 +95,7 @@ function groupListClicked(groupId){
 
         document.getElementById('calendar').style.display = 'none';
         document.getElementById('groupAdd').style.display = 'flex';
+        document.getElementById('groupUpdate').style.display = 'none';
     }
 }
 
@@ -99,7 +111,7 @@ function updategroupAddPane(){
 
     const groupId = document.getElementById('info-content-groupId').innerHTML;
 
-    axios.get('/account/retriveGroupInfo',{
+    axios.get('/account/retriveGroup',{
         params: {
             id: groupId
         }
@@ -130,4 +142,93 @@ function updateChkbox(id){
 
 function deleteBtnClicked(){
     console.log('delete!');
+}
+
+function showCalendar(){
+    document.getElementById('calendar').style.display = 'flex';
+    document.getElementById('groupAdd').style.display = 'none';
+    document.getElementById('groupUpdate').style.display = 'none';
+}
+
+function searchMember(id){
+    let text = document.getElementById(id).value;
+    document.getElementById(id).value = '';
+
+    axios.get('/account/retriveAccount',{
+        params:{
+            id: text
+        }
+    })
+        .then((res)=> {
+            let member = document.createElement('li');
+            member.style.listStyle="none";
+            member.innerHTML = `
+            <div id="tmpSearch" style="font-size:14px">
+                ${res.data.name}
+                <button type="button" onclick="addToMember('${res.data.id}',true)">=></button>
+            </div>`;
+
+            document.getElementById('groupAdd-searchPane').appendChild(member);
+            console.log(res.data.id);
+            text='';
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
+}
+
+function addToMember(id,flag){
+    axios.get('/account/retriveAccount',{
+        params:{
+            id: id
+        }
+    })
+        .then((res)=>{
+            let newElem = document.createElement('li');
+            newElem.style.listStyle="none";
+            newElem.className = "memberListelem";
+            newElem.id = `groupAdd-elem-${res.data.id}`;
+            
+            if(!flag) {newElem.innerHTML = `
+            <label>${res.data.name}</label>
+            <button type="button" onclick="deleteElem('${res.data.id}')" disabled>x</button>
+            `; 
+            } else {
+                newElem.innerHTML = `
+            <label>${res.data.name}</label>
+            <button type="button" onclick="deleteElem('${res.data.id}')">x</button>
+            `;
+            }
+
+            document.getElementById('groupAdd-memberList').appendChild(newElem);
+
+            document.getElementById('groupAdd-groupMembers').value+=res.data.id+'.';
+            console.log(document.getElementById('groupAdd-groupMembers').value);
+
+            if(flag) document.getElementById('tmpSearch').remove();
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
+}
+
+function deleteElem(id){
+    const realId = `groupAdd-elem-${id}`;
+    document.getElementById(realId).remove();
+
+    let groupMembers = document.getElementById('groupAdd-groupMembers').value;
+
+    groupMembers = groupMembers.split('.');
+    groupMembers.pop();
+
+    const idx = groupMembers.indexOf(id);
+    if(idx>-1) groupMembers.splice(idx,1);
+
+    let string ='';
+
+    groupMembers.forEach((str)=>{
+        string += str +'.';
+    });
+
+    document.getElementById('groupAdd-groupMembers').value = string;
 }

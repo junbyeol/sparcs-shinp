@@ -38,6 +38,7 @@ router.post('/add', (req,res) => {
         }
         else {
             const newAccount = new account();
+            newAccount.name= req.body.name;
             newAccount.id = req.body.id;
             
             const inputPw = req.body.pw;
@@ -114,8 +115,8 @@ router.post('/login', (req,res) => {
     });
 });
 
-router.get('/retriveLoadGroups', function(req, res){
-    account.findOne({id:req.session.user_id},(err,schemas) => {
+router.get('/retriveAccount', (req, res) => {
+    account.findOne({id:req.query.id},(err,schemas) => {
         if(err) {
             console.log(err);
             res.status(500).end('DB Error');
@@ -124,13 +125,14 @@ router.get('/retriveLoadGroups', function(req, res){
     });
 });
 
-router.get('/retriveGroupInfo',(req,res)=>{
+router.get('/retriveGroup',(req,res)=>{
     group.findOne({groupId: req.query.id}, (err,schemas)=>{
         return res.json(schemas);
     });
 });
 
 router.post('/groupAdd', (req,res) => {
+    console.log(req.body);
     /* 이미 존재하는 ID인지 확인*/
     group.findOne({groupId: req.body.groupId}, (err,user)=>{
         if(err){
@@ -156,9 +158,8 @@ router.post('/groupAdd', (req,res) => {
             newGroup.groupMeetings.fri = req.body.fri;
             newGroup.groupMeetings.sat = req.body.sat;
             
-            const loginAccount = req.session.user_id;
-            newGroup.groupMembers = loginAccount;
-            console.log(req.session.user_id);
+            newGroup.groupMembers = req.body.members.split('.');
+            newGroup.groupMembers.pop();
 
             newGroup.save((err) => {
                 if(err) {
@@ -168,30 +169,31 @@ router.post('/groupAdd', (req,res) => {
                 console.log('good database created');
                 console.log(newGroup);
                 
-                account.findOne({id: loginAccount}, (err,user) => {
-                    if(err){
-                        console.log(err);
-                        return res.redirect('/error');
-                    } else if(!user){
-                        return res.redirect('/error');
-                    }
-                    else {
-                        user.groupList.push({
-                            groupName: req.body.groupName, 
-                            groupId: req.body.groupId
-                        });
-                        user.save((err) => {
-                            if(err) {
-                                console.log(user);
-                                console.log(err);
-                                return res.redirect('/home');
-                            }
-                            console.log('database pushed well');
-                            return res.redirect('/home');
-                        });
-                    }
+                newGroup.groupMembers.forEach((loginAccount)=>{
+                    account.findOne({id: loginAccount}, (err,user) => {
+                        if(err){
+                            console.log(err);
+                            return res.redirect('/error');
+                        } else if(!user){
+                            return res.redirect('/error');
+                        }
+                        else {
+                            user.groupList.push({
+                                groupName: req.body.groupName, 
+                                groupId: req.body.groupId
+                            });
+                            user.save((err) => {
+                                if(err) {
+                                    console.log(user);
+                                    console.log(err);
+                                    return res.redirect('/home');
+                                }
+                            });
+                        }
+                    });
                 });
-
+                console.log('database pushed well');
+                return res.redirect('/home');
             });
             
         }

@@ -26,6 +26,7 @@
                 <form method="POST" action="/account/add">
                     <div class="loginPane-inputPane">
                         <input id="idInput" type="text" placeholder="ID" name="id">
+                        <input id="nameInput" type="text" placeholder="이름" name="name">
                         <input id="pwInput" type="password" placeholder="Password" name="pw">
                         <input id="pw2Input" type="password" placeholder="Password(again)" name="pwCheck">
                     </div>
@@ -33,7 +34,7 @@
                         <button id="registerConfirmBtn" type="submit">회원가입</button>
                         <div class="loginPane-btnPane-extraBtn">
                             <button type="button" id="backBtn" onclick="location.href='/login'">뒤로</button>
-                            <button id="lostBtn">ID/PW찾기</button>
+                            <button id="lostBtn" disabled>ID/PW찾기</button>
                         </div>
                     </div>
                 </form>

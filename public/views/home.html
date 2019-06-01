@@ -122,13 +122,23 @@
                                 </span>
                                 <span>
                                     <label>그룹 멤버<br>추가</label>
-                                    <table class="groupMemberTable">
-
-                                    </table>
+                                    <div class="groupMemberPane">
+                                        <label>Id</label>
+                                        <div id="groupAdd-searchPane">
+                                            <div style="display:flex">
+                                                <input type="text" class="searchMember" id="groupAdd-search">
+                                                <button type="button" onclick="searchMember('groupAdd-search')" placeholder="검색할 id 입력">확인</button> 
+                                            </div>
+                                        </div>
+                                        <label>그룹원</label>
+                                        <ul id="groupAdd-memberList" class="memberList">
+                                        </ul>
+                                    </div>
                                 </span>
-                                <div class="btnPane">
+                                <input id="groupAdd-groupMembers" name="members">
+                                <div class="btnPane">   
                                     <button type="submit">확인</button>
-                                    <button type="button">취소</button>
+                                    <button type="button" onclick="showCalendar()">취소</button>
                                 </div>
                             </form>
                         </div>
@@ -162,13 +172,20 @@
                                     </span>
                                     <span>
                                         <label>그룹 멤버<br>추가</label>
-                                        <table class="groupMemberTable">
-    
-                                        </table>
+                                        <div class="groupMemberPane">
+                                            <form class="searchMember">
+                                                <label>id: </label>
+                                                <input type="text" name="id">
+                                            </form>
+                                            <table class="groupMemberTable">
+
+                                            </table>
+                                        </div>
+                                        
                                     </span>
                                     <div class="btnPane">
                                         <button type="submit">확인</button>
-                                        <button type="button">취소</button>
+                                        <button type="button" onclick="showCalendar()">취소</button>
                                     </div>
                                 </form>
                             </div>

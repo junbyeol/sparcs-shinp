@@ -18,6 +18,7 @@ const Group = new Schema({
 });
 
 const Account = new Schema({
+    name: String,
     id: String,
     pw: String,
     salt: String,
