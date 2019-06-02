@@ -115,6 +115,11 @@ router.post('/login', (req,res) => {
     });
 });
 
+router.post('/logout',(req,res)=>{
+    req.session.destroy();
+    return res.redirect('/home');
+});
+
 router.get('/retriveAccount', (req, res) => {
     account.findOne({id:req.query.id},(err,schemas) => {
         if(err) {
@@ -224,6 +229,9 @@ router.post('/groupUpdate', (req,res) => {
             schema.groupMeetings.fri = req.body.fri;
             schema.groupMeetings.sat = req.body.sat;
 
+            schema.groupMembers = req.body.members.split('.');
+            schema.groupMembers.pop();
+
             schema.save((err) => {
                 if(err) {
                     console.log(err);
@@ -231,6 +239,30 @@ router.post('/groupUpdate', (req,res) => {
                 }
                 console.log('good database updated');
                 console.log(schema);
+                schema.groupMembers.forEach((loginAccount)=>{
+                    account.findOne({id: loginAccount}, (err,user) => {
+                        if(err){
+                            console.log(err);
+                            return res.redirect('/error');
+                        } else if(!user){
+                            return res.redirect('/error');
+                        }
+                        else {
+                            user.groupList.push({
+                                groupName: req.body.groupName, 
+                                groupId: req.body.groupId
+                            });
+                            user.save((err) => {
+                                if(err) {
+                                    console.log(user);
+                                    console.log(err);
+                                    return res.redirect('/home');
+                                }
+                            });
+                        }
+                    });
+                });
+
                 return res.redirect('/home');
             });
             
@@ -238,8 +270,58 @@ router.post('/groupUpdate', (req,res) => {
     });
 });
 
+router.post('/groupOut',(req,res)=>{
+    account.findOne({id:req.body.user},(err,userSchema)=>{
+        if(err){
+            console.log(err);
+        } else {
+            let groupList = userSchema.groupList;
+            let tmpArray = [];
+            const idx = tmpArray.map((e)=>{return e.groupId;}).indexOf(req.body.group);
+            groupList.splice(idx,1);
+            userSchema.groupList = groupList;
+            console.log(userSchema.groupList);
+
+            userSchema.save((err)=>{
+                if(err){
+                    console.log(err);
+                    return res.redirect('/home');
+                }
+                group.findOne({groupId: req.body.group},(err,groupSchema)=>{
+                    if(err) {
+                        console.log(err);
+                    } else {
+                        let memberList = groupSchema.groupMembers;
+                        const idx = memberList.indexOf(req.body.user);
+                        memberList.splice(idx,1);
+                        groupSchema.groupMembers = memberList;
+                        console.log(groupSchema.groupMembers);
+            
+                        if(memberList.length === 0) {
+                            groupSchema.deleteOne({groupId: req.body.group},(err)=>{
+                                if(err){
+                                    console.log(err);
+                                    return res.redirect('/home');
+                                }
+                                console.log('group successfully delete!');
+                                return res.redirect('/home');
+                            });
+                        } else {
+                            groupSchema.save((err)=>{
+                                if(err){
+                                    console.log(err);
+                                    return res.redirect('/home');
+                                } 
+                                return res.redirect('/home');
+                            });
+                        }
+                    }
+                    
+                });
+            });
+        }
+
+    });
+});
+
 module.exports = router;
-
-
-
-

@@ -3,6 +3,8 @@
 /* public/scripts/main.js */
 
 console.log('start');
+let loginedID;
+let showingGroup;
 
 // eslint-disable-next-line no-undef
 
@@ -11,8 +13,6 @@ async function loadPage(){
     document.getElementById('calendar').style.display = 'none';
     document.getElementById('groupAdd').style.display = 'none';
     document.getElementById('groupUpdate').style.display = 'none';
-
-    let loginedID;
 
     //loadLoginedID();
     await axios.post('/getSession')
@@ -39,7 +39,7 @@ async function loadPage(){
             }
             addGrouplist({groupName:"+ 새 그룹 추가", groupId:"add"});
 
-            addToMember(res.data.id,false);
+            addToMember(res.data.id,false,'Add');
         })
         .catch((err)=>{
             console.log(err);
@@ -53,8 +53,13 @@ function addGrouplist(val){
     document.getElementById('grouplist-ul').appendChild(group);
 }
 
+function deleteGrouplist(val){
+    document.getElementById(`grouplist-${val}`).parentNode.remove();
+}
+
 function groupListClicked(groupId){
     if(groupId!=="add") {
+        showingGroup = groupId;
         
         //중앙판넬 수정
         document.getElementById('calendar').style.display = 'flex';
@@ -122,6 +127,11 @@ function updategroupAddPane(){
             document.getElementById('groupIdInput').value = res.data.groupId;
             document.getElementById('groupInfoInput').value = res.data.groupInfo; 
 
+            res.data.groupMembers.forEach((mem)=>{
+                if(mem===loginedID) addToMember(mem,false,'Update');
+                else addToMember(mem,true,'Update');
+            });
+            
             if(res.data.groupMeetings.sun) updateChkbox('sunInp');
             if(res.data.groupMeetings.mon) updateChkbox('monInp');
             if(res.data.groupMeetings.tue) updateChkbox('tueInp');
@@ -140,8 +150,24 @@ function updateChkbox(id){
     document.getElementById(id).checked=true;
 }
 
-function deleteBtnClicked(){
-    console.log('delete!');
+function outBtnClicked(){
+    axios.post('/account/groupOut',{
+        user: loginedID,
+        group: showingGroup
+    })
+        .then((res)=>{
+            document.getElementById('info-placeholder').style.display ='flex';
+            document.getElementById('info-content').style.display = 'none';
+
+            document.getElementById('calendar').style.display = 'none';
+            document.getElementById('groupAdd').style.display = 'none';
+            document.getElementById('groupUpdate').style.display = 'none';
+
+            deleteGrouplist(showingGroup);
+        })
+        .catch((err)=>{
+            console.log(err);
+        });
 }
 
 function showCalendar(){
@@ -150,7 +176,7 @@ function showCalendar(){
     document.getElementById('groupUpdate').style.display = 'none';
 }
 
-function searchMember(id){
+function searchMember(id,type){
     let text = document.getElementById(id).value;
     document.getElementById(id).value = '';
 
@@ -160,24 +186,34 @@ function searchMember(id){
         }
     })
         .then((res)=> {
-            let member = document.createElement('li');
-            member.style.listStyle="none";
-            member.innerHTML = `
-            <div id="tmpSearch" style="font-size:14px">
-                ${res.data.name}
-                <button type="button" onclick="addToMember('${res.data.id}',true)">=></button>
-            </div>`;
-
-            document.getElementById('groupAdd-searchPane').appendChild(member);
-            console.log(res.data.id);
-            text='';
+            if(res.data){
+                let member = document.createElement('li');
+                member.style.listStyle="none";
+                member.innerHTML = `
+                <div id="tmpSearch" style="font-size:14px">
+                    ${res.data.name}
+                    <button type="button" onclick="addToMember('${res.data.id}',true,'${type}')">=></button>
+                </div>`;
+                document.getElementById(`group${type}-searchPane`).appendChild(member);
+                text='';
+            }
+            else {
+                let member = document.createElement('li');
+                member.style.listStyle="none";
+                member.innerHTML = `
+                <div id="tmpSearch" style="font-size:14px">
+                    해당 id의 유저가 없습니다.
+                </div>`;
+                document.getElementById(`group${type}-searchPane1`).appendChild(member);
+                text='';
+            }
         })
         .catch((err)=>{
             console.log(err);
         });
 }
 
-function addToMember(id,flag){
+function addToMember(id,flag,type){
     axios.get('/account/retriveAccount',{
         params:{
             id: id
@@ -187,23 +223,22 @@ function addToMember(id,flag){
             let newElem = document.createElement('li');
             newElem.style.listStyle="none";
             newElem.className = "memberListelem";
-            newElem.id = `groupAdd-elem-${res.data.id}`;
+            newElem.id = `group${type}-elem-${res.data.id}`;
             
             if(!flag) {newElem.innerHTML = `
             <label>${res.data.name}</label>
-            <button type="button" onclick="deleteElem('${res.data.id}')" disabled>x</button>
+            <button type="button" onclick="deleteElem('${res.data.id}','${type}')" disabled>x</button>
             `; 
             } else {
                 newElem.innerHTML = `
             <label>${res.data.name}</label>
-            <button type="button" onclick="deleteElem('${res.data.id}')">x</button>
+            <button type="button" onclick="deleteElem('${res.data.id}','${type}')">x</button>
             `;
             }
 
-            document.getElementById('groupAdd-memberList').appendChild(newElem);
+            document.getElementById(`group${type}-memberList`).appendChild(newElem);
 
-            document.getElementById('groupAdd-groupMembers').value+=res.data.id+'.';
-            console.log(document.getElementById('groupAdd-groupMembers').value);
+            document.getElementById(`group${type}-groupMembers`).value+=res.data.id+'.';
 
             if(flag) document.getElementById('tmpSearch').remove();
         })
@@ -212,11 +247,11 @@ function addToMember(id,flag){
         });
 }
 
-function deleteElem(id){
-    const realId = `groupAdd-elem-${id}`;
+function deleteElem(id,type){
+    const realId = `group${type}-elem-${id}`;
     document.getElementById(realId).remove();
 
-    let groupMembers = document.getElementById('groupAdd-groupMembers').value;
+    let groupMembers = document.getElementById(`group${type}-groupMembers`).value;
 
     groupMembers = groupMembers.split('.');
     groupMembers.pop();
@@ -230,5 +265,5 @@ function deleteElem(id){
         string += str +'.';
     });
 
-    document.getElementById('groupAdd-groupMembers').value = string;
+    document.getElementById(`group${type}-groupMembers`).value = string;
 }

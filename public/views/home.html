@@ -27,6 +27,9 @@
             <div class="login-status">
                 <img src="user_icon.png" height="20">
                 <a id="login-status-loginedID"></a>
+                <form action="/account/logout" method="POST">
+                    <button>로그아웃</button>
+                </form>
             </div>
        </header>
        <div class="mainPane">
@@ -59,7 +62,7 @@
                             </span>
                             <div id="info-content-btnPane">
                                 <button type="submit" onclick="updategroupAddPane()">정보수정</button>
-                                <button type="button" onclick="deleteBtnClicked()" disabled>그룹삭제</button>
+                                <button type="button" onclick="outBtnClicked()">그룹탈퇴</button>
                                 
                             </div>
                         </div>
@@ -127,7 +130,7 @@
                                         <div id="groupAdd-searchPane">
                                             <div style="display:flex">
                                                 <input type="text" class="searchMember" id="groupAdd-search">
-                                                <button type="button" onclick="searchMember('groupAdd-search')" placeholder="검색할 id 입력">확인</button> 
+                                                <button type="button" onclick="searchMember('groupAdd-search','Add')" placeholder="검색할 id 입력">확인</button> 
                                             </div>
                                         </div>
                                         <label>그룹원</label>
@@ -135,7 +138,7 @@
                                         </ul>
                                     </div>
                                 </span>
-                                <input id="groupAdd-groupMembers" name="members">
+                                <input id="groupAdd-groupMembers" name="members" style="display:none">
                                 <div class="btnPane">   
                                     <button type="submit">확인</button>
                                     <button type="button" onclick="showCalendar()">취소</button>
@@ -173,17 +176,20 @@
                                     <span>
                                         <label>그룹 멤버<br>추가</label>
                                         <div class="groupMemberPane">
-                                            <form class="searchMember">
-                                                <label>id: </label>
-                                                <input type="text" name="id">
-                                            </form>
-                                            <table class="groupMemberTable">
-
-                                            </table>
+                                            <label>Id</label>
+                                            <div id="groupUpdate-searchPane">
+                                                <div style="display:flex">
+                                                    <input type="text" class="searchMember" id="groupUpdate-search">
+                                                    <button type="button" onclick="searchMember('groupUpdate-search','Update')" placeholder="검색할 id 입력">확인</button> 
+                                                </div>
+                                            </div>
+                                            <label>그룹원</label>
+                                            <ul id="groupUpdate-memberList" class="memberList">
+                                            </ul>
                                         </div>
-                                        
                                     </span>
-                                    <div class="btnPane">
+                                    <input id="groupUpdate-groupMembers" name="members" >
+                                    <div class="btnPane">   
                                         <button type="submit">확인</button>
                                         <button type="button" onclick="showCalendar()">취소</button>
                                     </div>

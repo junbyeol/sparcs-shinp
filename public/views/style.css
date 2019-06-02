@@ -68,15 +68,19 @@ button:disabled{
 }
 
 .login-status {
-    position: absolute;
+    display: flex;
+    align-self: center;
     padding: 5px 5px;
-    top: 18px;
-    left: 1000px;
+    margin-left: 50px;
 
     border: 1px solid rgba(0,0,0,.54);
     border-radius: 10px;
     
     align-items: center;
+}
+
+.login-status button{
+    margin-left: 3px;
 }
 
 
