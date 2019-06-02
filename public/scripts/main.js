@@ -59,12 +59,6 @@ function deleteGrouplist(val){
 
 function groupListClicked(groupId){
     if(groupId!=="add") {
-        showingGroup = groupId;
-        
-        //중앙판넬 수정
-        document.getElementById('calendar').style.display = 'flex';
-        document.getElementById('groupAdd').style.display = 'none';
-        document.getElementById('groupUpdate').style.display = 'none';
 
         //왼쪽 위 정보판넬 수정
         document.getElementById('info-placeholder').style.display ='none';
@@ -76,9 +70,13 @@ function groupListClicked(groupId){
             }
         })
             .then((res)=>{
+                showingGroup = res.data;
+                showCalendar();
+
                 document.getElementById('info-content-groupName').innerHTML = res.data.groupName;
                 document.getElementById('info-content-groupId').innerHTML = res.data.groupId;
                 document.getElementById('info-content-groupInfo').innerHTML = res.data.groupInfo;
+                
                 var day ='';
                 if(res.data.groupMeetings.sun) day +='일 ';
                 if(res.data.groupMeetings.mon) day +='월 ';
@@ -109,7 +107,7 @@ function checkboxClicked(id){
     chkbox.value = chkbox.checked;
 }
 
-function updategroupAddPane(){
+function loadgroupUpdatePane(){
     document.getElementById('calendar').style.display = 'none';
     document.getElementById('groupAdd').style.display = 'none';
     document.getElementById('groupUpdate').style.display = 'flex';
@@ -127,11 +125,21 @@ function updategroupAddPane(){
             document.getElementById('groupIdInput').value = res.data.groupId;
             document.getElementById('groupInfoInput').value = res.data.groupInfo; 
 
+            //reset memberList
+            var momElem = document.getElementById('groupUpdate-memberList');
+            var childElem = momElem.lastElementChild;
+            while(childElem){
+                momElem.removeChild(childElem);
+                childElem = momElem.lastElementChild;
+            }
+
+            //put member's name in memberList
             res.data.groupMembers.forEach((mem)=>{
                 if(mem===loginedID) addToMember(mem,false,'Update');
-                else addToMember(mem,true,'Update');
+                else addToMember(mem,false,'Update');
             });
             
+            //check the checkboxes
             if(res.data.groupMeetings.sun) updateChkbox('sunInp');
             if(res.data.groupMeetings.mon) updateChkbox('monInp');
             if(res.data.groupMeetings.tue) updateChkbox('tueInp');
@@ -153,7 +161,7 @@ function updateChkbox(id){
 function outBtnClicked(){
     axios.post('/account/groupOut',{
         user: loginedID,
-        group: showingGroup
+        group: showingGroup.groupId
     })
         .then((res)=>{
             document.getElementById('info-placeholder').style.display ='flex';
@@ -163,7 +171,7 @@ function outBtnClicked(){
             document.getElementById('groupAdd').style.display = 'none';
             document.getElementById('groupUpdate').style.display = 'none';
 
-            deleteGrouplist(showingGroup);
+            deleteGrouplist(showingGroup.groupId);
         })
         .catch((err)=>{
             console.log(err);
@@ -174,6 +182,9 @@ function showCalendar(){
     document.getElementById('calendar').style.display = 'flex';
     document.getElementById('groupAdd').style.display = 'none';
     document.getElementById('groupUpdate').style.display = 'none';
+
+    console.log(showingGroup);
+    buildCalendar(showingGroup.groupMeetings);
 }
 
 function searchMember(id,type){
@@ -192,7 +203,10 @@ function searchMember(id,type){
                 member.innerHTML = `
                 <div id="tmpSearch" style="font-size:14px">
                     ${res.data.name}
-                    <button type="button" onclick="addToMember('${res.data.id}',true,'${type}')">=></button>
+                    <button type="button" onclick="
+                    addToMember('${res.data.id}',true,'${type}');
+                    document.getElementById('tmpSearch').remove();
+                    ">=></button>
                 </div>`;
                 document.getElementById(`group${type}-searchPane`).appendChild(member);
                 text='';
@@ -204,7 +218,7 @@ function searchMember(id,type){
                 <div id="tmpSearch" style="font-size:14px">
                     해당 id의 유저가 없습니다.
                 </div>`;
-                document.getElementById(`group${type}-searchPane1`).appendChild(member);
+                document.getElementById(`group${type}-searchPane`).appendChild(member);
                 text='';
             }
         })
@@ -239,8 +253,6 @@ function addToMember(id,flag,type){
             document.getElementById(`group${type}-memberList`).appendChild(newElem);
 
             document.getElementById(`group${type}-groupMembers`).value+=res.data.id+'.';
-
-            if(flag) document.getElementById('tmpSearch').remove();
         })
         .catch((err)=>{
             console.log(err);

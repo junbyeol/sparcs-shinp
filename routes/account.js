@@ -163,8 +163,12 @@ router.post('/groupAdd', (req,res) => {
             newGroup.groupMeetings.fri = req.body.fri;
             newGroup.groupMeetings.sat = req.body.sat;
             
-            newGroup.groupMembers = req.body.members.split('.');
-            newGroup.groupMembers.pop();
+            const memberList = req.body.members.split('.');
+            memberList.pop();
+
+            newGroup.groupMembers = memberList.filter((item,pos)=>{
+                return memberList.indexOf(item) == pos;
+            });
 
             newGroup.save((err) => {
                 if(err) {
@@ -229,8 +233,12 @@ router.post('/groupUpdate', (req,res) => {
             schema.groupMeetings.fri = req.body.fri;
             schema.groupMeetings.sat = req.body.sat;
 
-            schema.groupMembers = req.body.members.split('.');
-            schema.groupMembers.pop();
+            const memberList = req.body.members.split('.');
+            memberList.pop();
+
+            schema.groupMembers = memberList.filter((item,pos)=>{
+                return memberList.indexOf(item) == pos;
+            });
 
             schema.save((err) => {
                 if(err) {
@@ -248,10 +256,14 @@ router.post('/groupUpdate', (req,res) => {
                             return res.redirect('/error');
                         }
                         else {
-                            user.groupList.push({
+                            const newGroup = {
                                 groupName: req.body.groupName, 
                                 groupId: req.body.groupId
-                            });
+                            };
+
+                            if(user.groupList.indexOf(newGroup) === -1) {
+                                user.groupList.push();
+                            }
                             user.save((err) => {
                                 if(err) {
                                     console.log(user);

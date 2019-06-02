@@ -13,7 +13,7 @@
     </head>
     <body>
        <header>
-            <h1 id="header-title">ChoolCheckNet</h1>
+            <h1 id="header-title" onclick="location.href='/home'">ChoolCheckNet</h1>
             <nav class="header-nav">
                 <ul class="header-nav-ul">
                     <li class="header-nav-link">
@@ -61,7 +61,7 @@
                                 <h2 id="info-content-groupMembers"></h2>
                             </span>
                             <div id="info-content-btnPane">
-                                <button type="submit" onclick="updategroupAddPane()">정보수정</button>
+                                <button type="submit" onclick="loadgroupUpdatePane()">정보수정</button>
                                 <button type="button" onclick="outBtnClicked()">그룹탈퇴</button>
                                 
                             </div>
@@ -77,10 +77,10 @@
                     <div id="calendar">
                         <table id="tbCalendar" border="3" align="center">
                                 <tr><!-- label은 마우스로 클릭을 편하게 해줌 -->
-                                    <td onclick="prevCalendar()"><label><</label></td>
+                                    <td onclick="prevCalendar()" style="cursor:pointer"><label><</label></td>
                                     <td align="center" id="tbCalendarYM" colspan="5">
                                     yyyy년 m월</td>
-                                    <td onclick="nextCalendar()"><label >></label></td>
+                                    <td onclick="nextCalendar()" style="cursor:pointer"><label >></label></td>
                                 </tr>
                                 <tr>
                                     <td align="center"><font color ="#F79DC2">일</td>
@@ -93,7 +93,7 @@
                                 </tr> 
                             </table>
                             <script language="javascript" type="text/javascript">
-                                buildCalendar();//
+                                buildCalendar({});//
                             </script>
                     </div>
                    
@@ -176,7 +176,7 @@
                                     <span>
                                         <label>그룹 멤버<br>추가</label>
                                         <div class="groupMemberPane">
-                                            <label>Id</label>
+                                            <label>Id 검색</label>
                                             <div id="groupUpdate-searchPane">
                                                 <div style="display:flex">
                                                     <input type="text" class="searchMember" id="groupUpdate-search">
@@ -188,7 +188,7 @@
                                             </ul>
                                         </div>
                                     </span>
-                                    <input id="groupUpdate-groupMembers" name="members" >
+                                    <input id="groupUpdate-groupMembers" name="members" style="display:none">
                                     <div class="btnPane">   
                                         <button type="submit">확인</button>
                                         <button type="button" onclick="showCalendar()">취소</button>

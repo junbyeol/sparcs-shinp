@@ -19,7 +19,7 @@ function nextCalendar() {//다음 달
     today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
     buildCalendar();//달력 cell 만들어 출력
 }
-function buildCalendar(){//현재 달 달력 만들기
+function buildCalendar(meetDay){//현재 달 달력 만들기
     var doMonth = new Date(today.getFullYear(),today.getMonth(),1);
     //이번 달의 첫째 날,
     //new를 쓰는 이유 : new를 쓰면 이번달의 로컬 월을 정확하게 받아온다.     
@@ -76,12 +76,22 @@ function buildCalendar(){//현재 달 달력 만들기
             row = tbCalendar.insertRow();
             //토요일 다음에 올 셀을 추가
         }
+
+        if(cnt%7==1 && meetDay.sun) cell.bgColor="#87ceeb";
+        if(cnt%7==2 && meetDay.mon) cell.bgColor="#87ceeb";
+        if(cnt%7==3 && meetDay.tue) cell.bgColor="#87ceeb";
+        if(cnt%7==4 && meetDay.wed) cell.bgColor="#87ceeb";
+        if(cnt%7==5 && meetDay.thu) cell.bgColor="#87ceeb";
+        if(cnt%7==6 && meetDay.fri) cell.bgColor="#87ceeb";
+        if(cnt%7==0 && meetDay.sat) cell.bgColor="#87ceeb";
+
         /*오늘의 날짜에 노란색 칠하기*/
         if (today.getFullYear() == date.getFullYear()
                  && today.getMonth() == date.getMonth()
                  && i == date.getDate()) {
             //달력에 있는 년,달과 내 컴퓨터의 로컬 년,달이 같고, 일이 오늘의 일과 같으면
-            cell.bgColor = "#FAF58C";//셀의 배경색을 노랑으로 
+            if(cell.bgColor !== "#87ceeb") cell.bgColor = "#FAF58C";//셀의 배경색을 노랑으로 
+            else cell.bgColor = "#7fff00";
         }
     }
 
