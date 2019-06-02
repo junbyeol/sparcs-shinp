@@ -180,6 +180,7 @@ router.post('/groupAdd', (req,res) => {
                 
                 newGroup.groupMembers.forEach((loginAccount)=>{
                     account.findOne({id: loginAccount}, (err,user) => {
+                        console.log(loginAccount);
                         if(err){
                             console.log(err);
                             return res.redirect('/error');
@@ -187,6 +188,7 @@ router.post('/groupAdd', (req,res) => {
                             return res.redirect('/error');
                         }
                         else {
+                            console.log(user.id);
                             user.groupList.push({
                                 groupName: req.body.groupName, 
                                 groupId: req.body.groupId

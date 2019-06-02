@@ -11,7 +11,16 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script> $(document).ready(loadPage) </script>
     </head>
-    <body>
+    <body onkeypress="userKeypress()">
+        <script>
+            function userKeypress(){
+                if(window.event.keyCode==13){
+                    window.event.keyCode=0;
+                } else {
+                    return;
+                }
+            }    
+        </script>
        <header>
             <h1 id="header-title" onclick="location.href='/home'">ChoolCheckNet</h1>
             <nav class="header-nav">
